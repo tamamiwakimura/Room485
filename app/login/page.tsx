@@ -1,20 +1,25 @@
 "use client"
-import React from 'react'
-import { useSession, signIn, signOut } from "next-auth/react"
-const page = () => {
-    const {data:session} = useSession()
-    if(session){
-        <>
-        Signed in as {session.user?.email} <br/>
-        <button onClick={()=>signOut()}>signOut</button>
-        </>
-    }
+import React,{useState} from 'react'
+import Navbar from '../components/Navbar'
+import Link from 'next/link'
+function RegisterPage() {
   return (
-    <>
-        Not sign In <br/>
-        <button onClick={()=>signIn()}>signIn</button>
-    </>
+    <div>
+        <Navbar />
+        <div className='container mx-auto'>
+            <h3>Login page</h3>
+            <hr className='my-20'/>
+            <form action="">
+                <input type="text" placeholder='Enter your email' />
+                <input type="text" placeholder='Enter your password' />
+                <button type='submit'>Sign In</button>
+
+            </form>
+            <hr />
+            <p>Go to <Link href="/register">Register</Link></p>
+        </div>
+    </div>
   )
 }
 
-export default page
+export default RegisterPage
