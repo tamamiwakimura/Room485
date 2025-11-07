@@ -15,7 +15,7 @@ function RegisterPage() {
 
     const {data:session} = useSession();
     if(session) redirect("/welcome");
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault(); //ป้องกันหน้าเว็ป refresh
         if(password != confirmPassword){
@@ -54,7 +54,7 @@ function RegisterPage() {
     }
     return (
     <div>
-        <Navbar />
+        
         <div className='container mx-auto'>
             <h3>register page</h3>
             <hr className='my-20'/>

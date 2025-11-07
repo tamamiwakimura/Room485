@@ -13,7 +13,7 @@ function Welcome() {
   return (
     <div>
       <Navbar session={session as Session | null} /> 
-      <h3>Welcome {session?.user?.name}</h3>
+      <h1>ยินดีต้อนรับคุณ {session?.user?.name} นะ </h1>
     </div>
   );
 }
