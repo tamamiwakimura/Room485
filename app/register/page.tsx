@@ -9,6 +9,7 @@ function RegisterPage() {
     const [password,setPassword] = useState("");
     const [confirmPassword,setConfirmPassword] = useState("");
     const [error,setError] = useState("");
+    const [success,setSuccess]=useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault(); //ป้องกันหน้าเว็ป refresh
@@ -18,24 +19,32 @@ function RegisterPage() {
 
         }
 
-        if(!name || !email || !password || confirmPassword){
+        if(!name || !email || !password || !confirmPassword){
             setError("please complete all input")
             return;
         }
 
         try{
-            const res = await fetch("http://localhost:3000/api/register"{
-                method: "POST",
-                headers:{
-                    "Contetnt-type": "application/json"
-                },
-                body: JSON.stringify({
-                    name,email,password
-                })
-            })
+          const res = await fetch("http://localhost:3000/api/register", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, email, password })
+            });
+
+
+            if(res.ok){
+                const form = e.target;
+                setError("");
+                setSuccess("User registration success");
+                form.reset();
+            }else{
+                console.log("user registeration failed")
+            }
+
         }catch(eror){
             console.log("Eror during registration",eror);
-
         }
     }
     return (
@@ -49,6 +58,13 @@ function RegisterPage() {
                 {error && (
                     <div>
                         {error}
+                    </div>
+                    
+                )}
+
+                {success && (
+                    <div>
+                        {success}
                     </div>
                     
                 )}
