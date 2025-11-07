@@ -3,15 +3,16 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import { useSession } from 'next-auth/react';
-import { Session } from 'next-auth'; // ✅ เพิ่มเพื่อใช้ type ให้ชัดเจน
+import { Session } from 'next-auth'; 
+import { redirect } from 'next/navigation';
 
 function Welcome() {
-  const { data: session } = useSession(); // ✅ เปลี่ยนชื่อให้เป็นตัวเล็ก (ตามมาตรฐาน)
+  const { data: session } = useSession(); 
   console.log(session);
-
+  if(!session) redirect("/login");
   return (
     <div>
-      <Navbar session={session as Session | null} /> {/* ✅ ใส่ type cast ให้ตรง */}
+      <Navbar session={session as Session | null} /> 
       <h3>Welcome {session?.user?.name}</h3>
     </div>
   );
