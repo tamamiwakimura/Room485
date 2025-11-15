@@ -1,21 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import Navbar from "./components/Navbar";
 import {
-  DesktopOutlined,
-  FileOutlined,
   HomeOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Button, Layout, Menu, Table, theme, Typography } from "antd";
-const { Title } = Typography;
-const { Header, Content, Footer, Sider } = Layout;
+import { Layout, theme, Typography } from "antd";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
