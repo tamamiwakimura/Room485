@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
+import Navbar from "./components/Navbar";
 import {
   DesktopOutlined,
   FileOutlined,
@@ -85,7 +87,6 @@ const data: DataType[] = [
     name: "Disabled User"
   },
 ];
-
 export default function Home() {
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -93,57 +94,10 @@ export default function Home() {
   } = theme.useToken();
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <Title level={5} style={{ textAlign: "center", paddingTop: "8px", color: "#fff" }}>Room485</Title>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={['1']}
-          items={[
-            {
-              key: '1',
-              icon: <HomeOutlined/>,
-              label: 'Home',
-            },
-            {
-              key: '2',
-              icon: <UserOutlined />,
-              label: 'Users',
-            },
-          ]}
-        />
-      </Sider>
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer, display: "flex", alignItems: "center" }}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: '16px',
-              width: 64,
-              height: 64,
-            }}
-          />
-          <Title level={4} style={{ paddingTop: 8 }}>Home</Title>
-        </Header>
-        <Content style={{ padding: "16px" }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            <Table<DataType> columns={columns} dataSource={data} />
-          </div>
-        </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Room485 website ©{new Date().getFullYear()} Created by ATJ
-        </Footer>
-      </Layout>
-    </Layout>
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <main >
+        <Navbar />
+      </main>
+    </div>
   );
 }
