@@ -18,8 +18,6 @@ import {
   Typography,
   Tag,
   Modal,
-  Card,
-  Divider,
 } from "antd";
 import { useRouter, usePathname } from "next/navigation";
 const { Title } = Typography;
@@ -53,20 +51,23 @@ const items: MenuItem[] = [
 
 import type { TableColumnsType, TableProps } from "antd";
 
+interface PeopleType {
+  id: number;
+  name: string;
+  amount: number;
+}
+
 interface DataType {
   key: React.Key;
   name: string;
   date: string;
-  total: number;
+  people: PeopleType[];
   status: "paid" | "unpaid";
 }
 
 export default function Bill() {
   const [collapsed, setCollapsed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [selectedPaymentBill, setSelectedPaymentBill] =
-    useState<DataType | null>(null);
   const [selectedBill, setSelectedBill] = useState<DataType | null>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -78,15 +79,6 @@ export default function Bill() {
   const showModal = (record: DataType) => {
     setSelectedBill(record);
     setIsModalOpen(true);
-  };
-
-  const openPaymentModal = (record: DataType) => {
-    setSelectedPaymentBill(record);
-    setIsPaymentModalOpen(true);
-  };
-
-  const closePaymentModal = () => {
-    setIsPaymentModalOpen(false);
   };
 
   const handleCancel = () => {
@@ -105,7 +97,8 @@ export default function Bill() {
     {
       title: "Total",
       dataIndex: "total",
-      render: (value) => `${value.toLocaleString()} ฿`,
+      render: (_, record) =>
+        `${record.people.reduce((sum, p) => sum + p.amount, 0).toLocaleString()} ฿`,
     },
     {
       title: "Status",
@@ -120,23 +113,14 @@ export default function Bill() {
     {
       title: "Actions",
       render: (_, record) =>
-        record.status === "paid" ? (
-          <Button
-            color="blue"
-            variant="solid"
-            onClick={() => showModal(record)}
-          >
-            รายละเอียด
-          </Button>
-        ) : (
-          <Button
-            color="red"
-            variant="solid"
-            onClick={() => openPaymentModal(record)}
-          >
-            ชำระเงิน
-          </Button>
-        ),
+
+        <Button
+          color="blue"
+          variant="solid"
+          onClick={() => showModal(record)}
+        >
+          รายละเอียด
+        </Button>
     },
   ];
 
@@ -145,15 +129,12 @@ export default function Bill() {
       key: "1",
       name: "บิลประจำเดือน มกราคม",
       date: "10/11/68",
-      total: 1300,
+      people: [
+        { id: 1, name: "Jay", amount: 6000 },
+        { id: 2, name: "Tin", amount: 6000 },
+        { id: 3, name: "Athane", amount: 6000 },
+      ],
       status: "paid",
-    },
-    {
-      key: "2",
-      name: "บิลประจำเดือน กุมภาพันธ์",
-      date: "12/12/68",
-      total: 1200,
-      status: "unpaid",
     },
   ];
   return (
@@ -229,7 +210,7 @@ export default function Bill() {
         <Content style={{ padding: "16px" }}>
           <Breadcrumb
             style={{ margin: "16px 0" }}
-            items={[{ title: "Bills" }, { title: "Athane" }]}
+            items={[{ title: "Bills" }]}
           />
 
           <div
@@ -255,134 +236,29 @@ export default function Bill() {
       >
         {selectedBill && (
           <div>
-            <p>
-              <b>ชื่อบิล:</b> {selectedBill.name}
-            </p>
-            <p>
-              <b>วันที่:</b> {selectedBill.date}
-            </p>
-            <p>
-              <b>จำนวนเงิน:</b> {selectedBill.total.toLocaleString()} ฿
-            </p>
-            <p>
-              <b>สถานะ:</b>{" "}
-              {selectedBill.status === "paid" ? (
-                <Tag color="green">Paid</Tag>
-              ) : (
-                <Tag color="red">Unfunded</Tag>
-              )}
-            </p>
-          </div>
-        )}
-      </Modal>
-      <Modal
-        title="ชำระเงิน"
-        open={isPaymentModalOpen}
-        onCancel={closePaymentModal}
-        footer={null}
-      >
-        {selectedPaymentBill && (
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-            }}
-          >
-            <Card>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                  <HomeOutlined style={{ fontSize: 22 }} />
-                  <Typography style={{ fontWeight: "bold"}}>ค่าห้อง</Typography>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                  <Typography style={{ fontWeight: "bold"}}>6000 บาท</Typography>
-                  <Button type="primary">ชำระเงิน</Button>
-                </div>
-              </div>
-            </Card>
-
-            <Card
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "12px" }}
-              >
-                <div
-                  style={{
-                    width: 28,
-                    height: 28,
-                    background: "#eee",
-                    borderRadius: 6,
-                  }}
-                ></div>
-                <span>ค่าน้ำ</span>
-              </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "12px" }}
-              >
-                <span style={{ color: "red" }}>ยังไม่ชำระ</span>
-                <Button type="primary">ชำระเงิน</Button>
-              </div>
-            </Card>
-
-            <Card
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "12px" }}
-              >
-                <div
-                  style={{
-                    width: 28,
-                    height: 28,
-                    background: "#eee",
-                    borderRadius: 6,
-                  }}
-                ></div>
-                <span>ค่าไฟ</span>
-              </div>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "12px" }}
-              >
-                <span style={{ color: "red" }}>ยังไม่ชำระ</span>
-                <Button type="primary">ชำระเงิน</Button>
-              </div>
-            </Card>
-
-            <Divider />
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontSize: "16px",
-                fontWeight: "bold",
-              }}
-            >
-              <span>รวม</span>
-              <span>{selectedPaymentBill.total.toLocaleString()} บาท</span>
+            <div style={{ display: "flex", gap: 4 }}>
+              <Typography style={{ fontWeight: "bold" }}>ชื่อบิล: </Typography> {selectedBill.name}
             </div>
-
-            <Button type="primary" block style={{ height: 45 }}>
-              ชำระเงินทั้งหมด
-            </Button>
+            <div style={{ display: "flex", gap: 4 }}>
+              <Typography style={{ fontWeight: "bold" }}>วันที่:</Typography> {selectedBill.date}
+            </div>
+            <div style={{ display: "flex", gap: 4 }}>
+              <Typography style={{ fontWeight: "bold" }}>สถานะ: </Typography>{" "}
+              {selectedBill.status === "paid" ? (
+                <Tag color="green">ชำระแล้ว</Tag>
+              ) : (
+                <Tag color="red">ยังไม่ชำระ</Tag>
+              )}
+            </div>
+            <div style={{ display: "flex", gap: 4 }}>
+              <Typography style={{ fontWeight: "bold" }}>จำนวนเงินรวม: </Typography> 
+              {selectedBill.people.reduce((sum, p) => sum + p.amount, 0).toLocaleString()} ฿
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", paddingLeft: 8 }}>
+              {selectedBill.people.map((p) => (
+                <Typography key={p.id}>{p.name}: {p.amount} ฿</Typography>
+              ))}
+            </div>
           </div>
         )}
       </Modal>
